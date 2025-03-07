@@ -116,7 +116,7 @@ g_xy = 0
 g_yy = 1
 g_yx = 0
 n_cores = 8
-points = n_cores
+points = 2*n_cores
 params = {"L_x": L_x, "L_y": L_y, "w_0": w_0,
           "mu": mu, "Delta": Delta, "theta": theta,
            "Lambda_R": Lambda_R,
@@ -127,7 +127,7 @@ params = {"L_x": L_x, "L_y": L_y, "w_0": w_0,
 
 
 if __name__ == "__main__":
-    B_values = np.linspace(0, 3/2*Delta, points)
+    B_values = np.linspace(0, 2*Delta, points)
     with multiprocessing.Pool(n_cores) as pool:
         results_pooled = pool.map(integrate, B_values)
     n_B_y = np.array(results_pooled)
