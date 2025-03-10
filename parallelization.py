@@ -105,13 +105,13 @@ L_y = 1000
 w_0 = 10
 Delta = 0.2 # 0.2 ###############Normal state
 mu = -39 	#2*(20*Delta-2*w_0)
-theta = np.pi/2
-Lambda_R = 0.6      #0.56#5*Delta/np.sqrt((4*w_0 + mu)/w_0)/2
-Lambda_D = 0.7
+theta = 0   #np.pi/2
+Lambda_R = 0      #0.56#5*Delta/np.sqrt((4*w_0 + mu)/w_0)/2
+Lambda_D = 0
 h = 1e-2
 k_x_values = 2*np.pi/L_x*np.arange(0, L_x)
 k_y_values = 2*np.pi/L_y*np.arange(0, L_y)
-g_xx = 1
+g_xx = 2
 g_xy = 0
 g_yy = 1
 g_yx = 0
@@ -133,7 +133,7 @@ if __name__ == "__main__":
     n_B_y = np.array(results_pooled)
     
     data_folder = Path("Data/")
-    name = f"n_By_mu_{mu}_L={L_x}_h={h}_B_y_in_({np.min(B_values)}-{np.round(np.max(B_values),3)})_Delta={Delta}_lambda_R={Lambda_R}_lambda_D={Lambda_D}_g_xx={g_xx}_g_xy={g_xy}_g_yy={g_yy}_points={points}.npz"
+    name = f"n_By_mu_{mu}_L={L_x}_h={h}_B_y_in_({np.min(B_values)}-{np.round(np.max(B_values),3)})_Delta={Delta}_lambda_R={Lambda_R}_lambda_D={Lambda_D}_g_xx={g_xx}_g_xy={g_xy}_g_yy={g_yy}_theta={np.round(theta,2)}_points={points}.npz"
     file_to_open = data_folder / name
     np.savez(file_to_open , n_B_y=n_B_y, B_values=B_values,
              **params)
