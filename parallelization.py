@@ -100,14 +100,14 @@ def integrate(B):
     n[0], n[1], n[2] = get_superconducting_density(L_x, L_y, w_0, mu, Delta, B_x, B_y, Lambda_R, Lambda_D, h)
     return n
 
-L_x = 500
-L_y = 500
+L_x = 1000
+L_y = 1000
 w_0 = 10
 Delta = 0.2 # 0.2 ###############Normal state
 mu = -39 	#2*(20*Delta-2*w_0)
 theta = np.pi/2
-Lambda_R = 0.56      #0.56#5*Delta/np.sqrt((4*w_0 + mu)/w_0)/2
-Lambda_D = 0
+Lambda_R = 0.6      #0.56#5*Delta/np.sqrt((4*w_0 + mu)/w_0)/2
+Lambda_D = 0.7
 h = 1e-2
 k_x_values = 2*np.pi/L_x*np.arange(0, L_x)
 k_y_values = 2*np.pi/L_y*np.arange(0, L_y)
@@ -116,7 +116,7 @@ g_xy = 0
 g_yy = 1
 g_yx = 0
 n_cores = 8
-points = 2*n_cores
+points = 3*n_cores
 params = {"L_x": L_x, "L_y": L_y, "w_0": w_0,
           "mu": mu, "Delta": Delta, "theta": theta,
            "Lambda_R": Lambda_R,
