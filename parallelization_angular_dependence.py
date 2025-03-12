@@ -103,7 +103,7 @@ L_y = 1000
 w_0 = 10
 Delta = 0.2 # 0.2 ###############Normal state
 mu = -39 	#2*(20*Delta-2*w_0)
-B = 0.9*Delta
+B = 0.5*Delta
 Lambda_R = 0.56     #0.56#5*Delta/np.sqrt((4*w_0 + mu)/w_0)/2
 Lambda_D = 0
 h = 1e-2
@@ -135,6 +135,6 @@ if __name__ == "__main__":
     
     name = f"n_theta_mu_{mu}_L={L_x}_h={h}_theta_in_({np.min(theta_values)}-{np.round(np.max(theta_values),3)})B={np.round(B,2)}_Delta={Delta}_lambda_R={Lambda_R}_lambda_D={Lambda_D}_g_xx={g_xx}_g_xy={g_xy}_g_yy={g_yy}_points={points}.npz"
     file_to_open = data_folder / name
-    np.savez(file_to_open , n_theta=n_theta,
+    np.savez(file_to_open , n_theta=n_theta, theta_values=theta_values,
              **params)
     print("\007")
