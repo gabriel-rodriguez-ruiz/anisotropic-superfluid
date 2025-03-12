@@ -91,21 +91,19 @@ def get_DOS(omega, eta, L_x, L_y, w_0, mu, Delta, B_x, B_y, Lambda):
     G = get_Green_function(omega+1j*eta, k_x_values, k_y_values, w_0, mu, Delta, B_x, B_y, Lambda)
     return 1/(L_x*L_y) * 1/np.pi*np.sum(-np.imag(G), axis=(0,1))
 
-def integrate(B):
-    n = np.zeros(3)
+def integrate(theta):
+    n_theta = np.zeros(3)
     B_x = B * ( g_xx * np.cos(theta) + g_xy * np.sin(theta) ) 
     B_y = B * ( g_yx * np.cos(theta) + g_yy * np.sin(theta) )
-    # B_x = B * np.cos(theta)
-    # B_y = B * np.sin(theta)
-    n[0], n[1], n[2] = get_superconducting_density(L_x, L_y, w_0, mu, Delta, B_x, B_y, Lambda_R, Lambda_D, h)
-    return n
+    n_theta[0], n_theta[1], n_theta[2] = get_superconducting_density(L_x, L_y, w_0, mu, Delta, B_x, B_y, Lambda_R, Lambda_D, h)
+    return n_theta
 
 L_x = 1000
 L_y = 1000
 w_0 = 10
 Delta = 0.2 # 0.2 ###############Normal state
 mu = -39 	#2*(20*Delta-2*w_0)
-theta = np.pi/2   #np.pi/2
+B = 0.9*Delta
 Lambda_R = 0.56     #0.56#5*Delta/np.sqrt((4*w_0 + mu)/w_0)/2
 Lambda_D = 0
 h = 1e-2
@@ -118,24 +116,25 @@ g_yx = 0
 n_cores = 8
 points = 3*n_cores
 params = {"L_x": L_x, "L_y": L_y, "w_0": w_0,
-          "mu": mu, "Delta": Delta, "theta": theta,
+          "mu": mu, "Delta": Delta,
            "Lambda_R": Lambda_R,
           "h": h , "k_x_values": k_x_values,
           "k_y_values": k_y_values, "h": h,
           "Lambda_D": Lambda_D,
-          "g_xx": g_xx, "g_xy": g_xy, "g_yx": g_yx, "g_yy": g_yy}
+          "g_xx": g_xx, "g_xy": g_xy, "g_yx": g_yx, "g_yy": g_yy,
+          "B": B}
 
 
 if __name__ == "__main__":
-    B_values = np.linspace(0, 3*Delta, points)
+    theta_values = np.linspace(0, np.pi, 10)
     with multiprocessing.Pool(n_cores) as pool:
-        results_pooled = pool.map(integrate, B_values)
-    n_B_y = np.array(results_pooled)
+        results_pooled = pool.map(integrate, theta_values)
+    n_theta = np.array(results_pooled)
     
     data_folder = Path("Data/")
     
-    name = f"n_By_mu_{mu}_L={L_x}_h={h}_B_y_in_({np.min(B_values)}-{np.round(np.max(B_values),3)})_Delta={Delta}_lambda_R={Lambda_R}_lambda_D={Lambda_D}_g_xx={g_xx}_g_xy={g_xy}_g_yy={g_yy}_theta={np.round(theta,2)}_points={points}.npz"
+    name = f"n_theta_mu_{mu}_L={L_x}_h={h}_theta_in_({np.min(theta_values)}-{np.round(np.max(theta_values),3)})B={B}_Delta={Delta}_lambda_R={Lambda_R}_lambda_D={Lambda_D}_g_xx={g_xx}_g_xy={g_xy}_g_yy={g_yy}_points={points}.npz"
     file_to_open = data_folder / name
-    np.savez(file_to_open , n_B_y=n_B_y, B_values=B_values,
+    np.savez(file_to_open , n_theta=n_theta,
              **params)
     print("\007")
