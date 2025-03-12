@@ -126,14 +126,14 @@ params = {"L_x": L_x, "L_y": L_y, "w_0": w_0,
 
 
 if __name__ == "__main__":
-    theta_values = np.linspace(0, np.pi, 10)
+    theta_values = np.linspace(0, np.pi, points)
     with multiprocessing.Pool(n_cores) as pool:
         results_pooled = pool.map(integrate, theta_values)
     n_theta = np.array(results_pooled)
     
     data_folder = Path("Data/")
     
-    name = f"n_theta_mu_{mu}_L={L_x}_h={h}_theta_in_({np.min(theta_values)}-{np.round(np.max(theta_values),3)})B={B}_Delta={Delta}_lambda_R={Lambda_R}_lambda_D={Lambda_D}_g_xx={g_xx}_g_xy={g_xy}_g_yy={g_yy}_points={points}.npz"
+    name = f"n_theta_mu_{mu}_L={L_x}_h={h}_theta_in_({np.min(theta_values)}-{np.round(np.max(theta_values),3)})B={np.round(B,2)}_Delta={Delta}_lambda_R={Lambda_R}_lambda_D={Lambda_D}_g_xx={g_xx}_g_xy={g_xy}_g_yy={g_yy}_points={points}.npz"
     file_to_open = data_folder / name
     np.savez(file_to_open , n_theta=n_theta,
              **params)
