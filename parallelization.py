@@ -106,7 +106,7 @@ L_y = 1000
 w_0 = 10
 Delta = 0.2 # 0.2 ###############Normal state
 mu = -39 	#2*(20*Delta-2*w_0)
-theta = np.pi/2   #np.pi/2
+theta = 0   #np.pi/2
 Lambda_R = 0.56     #0.56#5*Delta/np.sqrt((4*w_0 + mu)/w_0)/2
 Lambda_D = 0
 h = 1e-2
@@ -135,7 +135,7 @@ if __name__ == "__main__":
     
     data_folder = Path("Data/")
     
-    name = f"n_By_mu_{mu}_L={L_x}_h={h}_B_y_in_({np.min(B_values)}-{np.round(np.max(B_values),3)})_Delta={Delta}_lambda_R={Lambda_R}_lambda_D={Lambda_D}_g_xx={g_xx}_g_xy={g_xy}_g_yy={g_yy}_theta={np.round(theta,2)}_points={points}.npz"
+    name = f"n_By_mu_{mu}_L={L_x}_h={h}_B_y_in_({np.min(B_values)}-{np.round(np.max(B_values),3)})_Delta={Delta}_lambda_R={Lambda_R}_lambda_D={Lambda_D}_g_xx={g_xx}_g_xy={g_xy}_g_yy={g_yy}_g_yx={g_yx}_theta={np.round(theta,2)}_points={points}.npz"
     file_to_open = data_folder / name
     np.savez(file_to_open , n_B_y=n_B_y, B_values=B_values,
              **params)
