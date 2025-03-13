@@ -70,8 +70,8 @@ def get_superconducting_density(L_x, L_y, w_0, mu, Delta, B_x, B_y, Lambda_R, La
     fundamental_energy = 1/2*np.sum(negative_energy, axis=(0, 1, 4))
     n_s_xx = 1/w_0 * 1/(L_x*L_y) * ( fundamental_energy[2,1] - 2*fundamental_energy[1,1] + fundamental_energy[0,1]) / h**2
     n_s_yy = 1/w_0 * 1/(L_x*L_y) * ( fundamental_energy[1,2] - 2*fundamental_energy[1,1] + fundamental_energy[1,0]) / h**2
-    n_s_xy = 1/w_0 * 1/(L_x*L_y) * ( fundamental_energy[2,2] - fundamental_energy[2,0] - fundamental_energy[0,2] + fundamental_energy[0,0]) / h**2
-    n_s_yx = 1/w_0 * 1/(L_x*L_y) * ( fundamental_energy[2,2] - fundamental_energy[2,0] - fundamental_energy[2,0] + fundamental_energy[0,0]) / h**2
+    n_s_xy = 1/w_0 * 1/(L_x*L_y) * ( fundamental_energy[2,2] - fundamental_energy[2,0] - fundamental_energy[0,2] + fundamental_energy[0,0]) / (2*h)**2  #Finite difference of mixed derivatives
+    n_s_yx = 1/w_0 * 1/(L_x*L_y) * ( fundamental_energy[2,2] - fundamental_energy[0,2] - fundamental_energy[2,0] + fundamental_energy[0,0]) / (2*h)**2
     return n_s_xx, n_s_yy, n_s_xy, n_s_yx
 
 def get_Green_function(omega, k_x_values, k_y_values, w_0, mu, Delta, B_x, B_y, Lambda):
@@ -106,16 +106,16 @@ L_y = 1000
 w_0 = 10
 Delta = 0.2 # 0.2 ###############Normal state
 mu = -39 	#2*(20*Delta-2*w_0)
-theta = np.pi/2   #np.pi/2
+theta = 0   #np.pi/2
 Lambda_R = 0.56     #0.56#5*Delta/np.sqrt((4*w_0 + mu)/w_0)/2
 Lambda_D = 0
 h = 1e-2
 k_x_values = 2*np.pi/L_x*np.arange(0, L_x)
 k_y_values = 2*np.pi/L_y*np.arange(0, L_y)
-g_xx = 1
-g_xy = -2
+g_xx = 2
+g_xy = -4
 g_yy = 2
-g_yx = 1
+g_yx = 2
 n_cores = 8
 points = 3*n_cores
 params = {"L_x": L_x, "L_y": L_y, "w_0": w_0,
@@ -128,7 +128,7 @@ params = {"L_x": L_x, "L_y": L_y, "w_0": w_0,
 
 
 if __name__ == "__main__":
-    B_values = np.linspace(0, 3*Delta, points)
+    B_values = np.linspace(0, 1.5*Delta, points)
     with multiprocessing.Pool(n_cores) as pool:
         results_pooled = pool.map(integrate, B_values)
     n_B_y = np.array(results_pooled)
