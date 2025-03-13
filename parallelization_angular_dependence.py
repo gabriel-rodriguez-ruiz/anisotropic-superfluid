@@ -71,7 +71,8 @@ def get_superconducting_density(L_x, L_y, w_0, mu, Delta, B_x, B_y, Lambda_R, La
     n_s_xx = 1/w_0 * 1/(L_x*L_y) * ( fundamental_energy[2,1] - 2*fundamental_energy[1,1] + fundamental_energy[0,1]) / h**2
     n_s_yy = 1/w_0 * 1/(L_x*L_y) * ( fundamental_energy[1,2] - 2*fundamental_energy[1,1] + fundamental_energy[1,0]) / h**2
     n_s_xy = 1/w_0 * 1/(L_x*L_y) * ( fundamental_energy[2,2] - fundamental_energy[2,0] - fundamental_energy[0,2] + fundamental_energy[0,0]) / h**2
-    return n_s_xx, n_s_yy, n_s_xy
+    n_s_yx = 1/w_0 * 1/(L_x*L_y) * ( fundamental_energy[2,2] - fundamental_energy[0,2] - fundamental_energy[2,0] + fundamental_energy[0,0]) / h**2
+    return n_s_xx, n_s_yy, n_s_xy, n_s_yx
 
 def get_Green_function(omega, k_x_values, k_y_values, w_0, mu, Delta, B_x, B_y, Lambda):
     G = np.zeros((len(k_x_values), len(k_y_values),
@@ -133,7 +134,7 @@ if __name__ == "__main__":
     
     data_folder = Path("Data/")
     
-    name = f"n_theta_mu_{mu}_L={L_x}_h={h}_theta_in_({np.min(theta_values)}-{np.round(np.max(theta_values),3)})B={np.round(B,2)}_Delta={Delta}_lambda_R={Lambda_R}_lambda_D={Lambda_D}_g_xx={g_xx}_g_xy={g_xy}_g_yy={g_yy}_points={points}.npz"
+    name = f"n_theta_mu_{mu}_L={L_x}_h={h}_theta_in_({np.min(theta_values)}-{np.round(np.max(theta_values),3)})B={np.round(B,2)}_Delta={Delta}_lambda_R={Lambda_R}_lambda_D={Lambda_D}_g_xx={g_xx}_g_xy={g_xy}_g_yy={g_yy}_g_yx={g_yx}_points={points}.npz"
     file_to_open = data_folder / name
     np.savez(file_to_open , n_theta=n_theta, theta_values=theta_values,
              **params)
