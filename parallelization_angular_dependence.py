@@ -92,10 +92,10 @@ def get_DOS(omega, eta, L_x, L_y, w_0, mu, Delta, B_x, B_y, Lambda):
     return 1/(L_x*L_y) * 1/np.pi*np.sum(-np.imag(G), axis=(0,1))
 
 def integrate(theta):
-    n_theta = np.zeros(3)
+    n_theta = np.zeros(4)
     B_x = B * ( g_xx * np.cos(theta) + g_xy * np.sin(theta) ) 
     B_y = B * ( g_yx * np.cos(theta) + g_yy * np.sin(theta) )
-    n_theta[0], n_theta[1], n_theta[2] = get_superconducting_density(L_x, L_y, w_0, mu, Delta, B_x, B_y, Lambda_R, Lambda_D, h)
+    n_theta[0], n_theta[1], n_theta[2], n_theta[3] = get_superconducting_density(L_x, L_y, w_0, mu, Delta, B_x, B_y, Lambda_R, Lambda_D, h)
     return n_theta
 
 L_x = 1000
