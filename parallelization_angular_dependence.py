@@ -111,9 +111,9 @@ h = 1e-2
 k_x_values = 2*np.pi/L_x*np.arange(0, L_x)
 k_y_values = 2*np.pi/L_y*np.arange(0, L_y)
 g_xx = 1
-g_xy = 0
-g_yy = 2
-g_yx = 0
+g_xy = 1
+g_yy = 1
+g_yx = 1
 n_cores = 8
 points = 3*n_cores
 params = {"L_x": L_x, "L_y": L_y, "w_0": w_0,
@@ -127,7 +127,7 @@ params = {"L_x": L_x, "L_y": L_y, "w_0": w_0,
 
 
 if __name__ == "__main__":
-    theta_values = np.linspace(0, np.pi, points)
+    theta_values = np.linspace(0, 2*np.pi, points)
     with multiprocessing.Pool(n_cores) as pool:
         results_pooled = pool.map(integrate, theta_values)
     n_theta = np.array(results_pooled)
