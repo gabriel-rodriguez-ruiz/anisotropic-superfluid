@@ -11,7 +11,7 @@ from pathlib import Path
 import numpy as np
 
 data_folder = Path("Data/")
-file_to_open = data_folder / "n_By_mu_-39_L=1000_h=0.01_B_y_in_(0.0-0.3)_Delta=0.2_lambda_R=0.56_lambda_D=0_g_xx=1_g_xy=-2_g_yy=1_g_yx=1_theta=0_points=24.npz"
+file_to_open = data_folder / "n_By_mu_-39_L=1000_h=0.01_B_y_in_(0.0-0.3)_Delta=0.2_lambda_R=0.56_lambda_D=0_g_xx=1_g_xy=-2_g_yy=1_g_yx=0_theta=0_points=24.npz"
 Data = np.load(file_to_open)
 
 n_B_y = Data["n_B_y"]
@@ -49,7 +49,7 @@ ax.set_title(r"$\lambda_R=$" + f"{np.round(Lambda_R,2)}"
              + r"; $g_{xy}=$" + f"{g_xy}"
              + r"$; g_{yx}=$" + f"{g_yx}")
 
-ax.set_xlabel(r"$\frac{gB}{\Delta}$")
+ax.set_xlabel(r"$\frac{\mu_BgB}{\Delta}$")
 ax.set_ylabel(r"$n_s$")
 ax.legend()
 
