@@ -108,14 +108,14 @@ Delta = 0.2 # 0.2 ###############Normal state
 mu = -39 	#2*(20*Delta-2*w_0)
 theta = 0   #np.pi/2
 Lambda_R = 0.56     #0.56#5*Delta/np.sqrt((4*w_0 + mu)/w_0)/2
-Lambda_D = 0.2
+Lambda_D = 0.3
 h = 1e-2
 k_x_values = 2*np.pi/L_x*np.arange(0, L_x)
 k_y_values = 2*np.pi/L_y*np.arange(0, L_y)
-g_xx = 1.5
-g_xy = -1
-g_yy = 2
-g_yx = 1
+g_xx = 1
+g_xy = -2
+g_yy = 4
+g_yx = 2
 n_cores = 8
 points = 3*n_cores
 params = {"L_x": L_x, "L_y": L_y, "w_0": w_0,
@@ -128,7 +128,7 @@ params = {"L_x": L_x, "L_y": L_y, "w_0": w_0,
 
 
 if __name__ == "__main__":
-    B_values = np.linspace(0, 1.5*Delta, points)
+    B_values = np.linspace(0, 3*Delta, points)
     with multiprocessing.Pool(n_cores) as pool:
         results_pooled = pool.map(integrate, B_values)
     n_B_y = np.array(results_pooled)
