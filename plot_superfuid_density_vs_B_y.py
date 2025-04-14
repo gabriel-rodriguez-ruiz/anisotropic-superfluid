@@ -16,7 +16,7 @@ dname = os.path.dirname(abspath)
 os.chdir(dname)
 
 data_folder = Path("Data/")
-file_to_open = data_folder / "n_By_mu_-49.5_L=1000_h=0.001_B_y_in_(0.0-1.2)_Delta=0.2_lambda_R=1.2175324675324675_lambda_D=0_g_xx=1_g_xy=0_g_yy=1_g_yx=0_theta=1.57_points=24.npz"
+file_to_open = data_folder / "n_By_mu_-349.0_L=2500_h=0.001_B_y_in_(0.0-1.2)_Delta=0.2_lambda_R=1.4049144729009981_lambda_D=0_g_xx=1_g_xy=0_g_yy=1_g_yx=0_theta=1.57_points=24.npz"
 Data = np.load(file_to_open)
 
 n_B_y = Data["n_B_y"]

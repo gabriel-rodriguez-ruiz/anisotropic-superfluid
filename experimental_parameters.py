@@ -11,24 +11,25 @@ import matplotlib.pyplot as plt
 
 E_F = 0.0506 # eV
 Delta = 0.2 # meV induced gap
-g = 10
+g = 100
 n = 8.5e11 # 1/cm**2
 
 hbar = 6.58e-16 # eV
 m_e = 5.1e5 / (3e10)**2 # eV
-a = 3.08e-07 * np.sqrt(10)  #6e-8 # cm
+a = 3.08e-07 * np.sqrt(1)  #3.08e-07   6e-8 # cm
 m = 0.0403 * m_e
 mu_B = 5.79e-5 # eV/T
 
 t = hbar**2 / (2*a**2*m) # eV
-k_F = np.sqrt(2*np.pi*n)
+k_F = np.sqrt(2*np.pi*n) # 1/cm
 mu = E_F - 4*t
-Lambda_R = 7.5e-7    #7.5e-7   # meV cm
-k_SO = Lambda_R * m / hbar**2
+Lambda_R = 5*Delta/k_F /a # meV
+# Lambda_R = 7.5e-7    #7.5e-7   # meV cm
+# k_SO = Lambda_R * m / hbar**2
 # Delta_Z = g*mu_B*B
-k_F_SO = np.array([(-Lambda_R + np.sqrt(Lambda_R**2 + 2*hbar**2/m*E_F)) / (hbar**2/m),
-                   (Lambda_R - np.sqrt(Lambda_R**2 + 2*hbar**2/m*E_F)) / (hbar**2/m)])
-Lambda_F_SO = 2*np.pi/k_F_SO
+# k_F_SO = np.array([(-Lambda_R + np.sqrt(Lambda_R**2 + 2*hbar**2/m*E_F)) / (hbar**2/m),
+#                    (Lambda_R - np.sqrt(Lambda_R**2 + 2*hbar**2/m*E_F)) / (hbar**2/m)])
+# Lambda_F_SO = 2*np.pi/k_F_SO
 
 #%% Free electron and tight-binding
 L_x = 1000
@@ -50,31 +51,33 @@ def SOC_tight_binding(k):
 fig, ax = plt.subplots()
 
 # ax.plot(k_values, [free_electron(k) for k in k_values])
-ax.plot(k_values, [free_electron_SOC(k) for k in k_values])
+ax.plot(k_values, [free_electron(k) for k in k_values])
+# ax.plot(k_values, [free_electron_SOC(k) for k in k_values])
 
 ax.plot(k_values, [E_F for k in k_values])
-ax.plot(k_values, [SOC_tight_binding(k) for k in k_values], ".")
+ax.plot(k_values, [tight_binding(k) for k in k_values], ".")
 # ax.plot(k_values, [t*a**2*k**2 for k in k_values], ".")
-ax.axvline(x=k_F_SO[0], ls='--', color="blue")
-ax.axvline(x=k_F_SO[1], ls='--', color="blue")
+ax.axvline(x=k_F, ls='--', color="blue")
+ax.axvline(x=-k_F, ls='--', color="blue")
 
 ax.set_xlabel(r"$k[cm^{-1}]$")
 ax.set_ylabel(r"$E_k[eV]$")
 
+plt.show()
 #%% Energy bands
-from analytic_energy import GetAnalyticEnergies
 
+g = 100
 L_x = 1000
 L_y = 1000
 t = 100 # meV
 mu = -3.49 * t  # meV
 Delta_0 = 0.2   #meV
-Lambda_R = 7.5e-7 / a  # meV
+Lambda_R = 7.5e-7 / a  #1.405  #7.5e-7 / a  # meV
 Lambda_D = 0
-B_x = 6*Delta_0     # T
+B_x = 0.05     # T
 B_y = 0     # eV/T
-Delta_Z_x = g*mu_B*B_x * 1000   # meV
-Delta_Z_y = g*mu_B*B_y * 1000   # meV
+Delta_Z_x = g*mu_B*B_x*1000   # meV
+Delta_Z_y = g*mu_B*B_y*1000   # meV
 
 
 k_x_values = 2*np.pi/L_x*np.arange(0, L_x)
@@ -82,6 +85,7 @@ k_y_values = 2*np.pi/L_y*np.arange(0, L_y)
 
 
 #%% 1D-plot of pockets
+from analytic_energy import GetAnalyticEnergies
 
 E = GetAnalyticEnergies([0], k_y_values, [0], [0], w_0=t, mu=mu, Delta=Delta_0,
                         B_x=Delta_Z_x, B_y=Delta_Z_y, Lambda_R=Lambda_R, Lambda_D=Lambda_D)

@@ -99,23 +99,26 @@ def integrate(theta):
     n_theta[0], n_theta[1], n_theta[2], n_theta[3] = get_superconducting_density(L_x, L_y, w_0, mu, Delta, B_x, B_y, Lambda_R, Lambda_D, h)
     return n_theta
 
-L_x = 1000
-L_y = 1000
-w_0 = 10
-Delta = 0.2 # 0.2 ###############Normal state
-mu = -39 	#2*(20*Delta-2*w_0)
-B = 0.9*Delta
-Lambda_R = 0.56     #0.56#5*Delta/np.sqrt((4*w_0 + mu)/w_0)/2
+L_x = 2500
+L_y = 2500
+w_0 = 100 #meV
+Delta = 0.2 # meV ###############Normal state
+mu = -3.49*w_0 	#2*(20*Delta-2*w_0)
+B = 0.050/0.035 * Delta
+a = 3.08e-07 * np.sqrt(1)#3.08e-07 # cm
+n = 8.5e11 # 1/cm**2
+k_F = np.sqrt(2*np.pi*n) # 1/cm
+Lambda_R = 5*Delta/(k_F*a)     #0.56#5*Delta/np.sqrt((4*w_0 + mu)/w_0)/2
 Lambda_D = 0
-h = 1e-2
+h = 1e-3
 k_x_values = 2*np.pi/L_x*np.arange(0, L_x)
 k_y_values = 2*np.pi/L_y*np.arange(0, L_y)
 g_xx = 1
-g_xy = 1
+g_xy = 0
 g_yy = 1
-g_yx = 1
+g_yx = 0
 n_cores = 8
-points = 3*n_cores
+points = 2*n_cores
 params = {"L_x": L_x, "L_y": L_y, "w_0": w_0,
           "mu": mu, "Delta": Delta,
            "Lambda_R": Lambda_R,
@@ -127,7 +130,7 @@ params = {"L_x": L_x, "L_y": L_y, "w_0": w_0,
 
 
 if __name__ == "__main__":
-    theta_values = np.linspace(0, 2*np.pi, points)
+    theta_values = np.linspace(0, np.pi/2, points)
     with multiprocessing.Pool(n_cores) as pool:
         results_pooled = pool.map(integrate, theta_values)
     n_theta = np.array(results_pooled)
