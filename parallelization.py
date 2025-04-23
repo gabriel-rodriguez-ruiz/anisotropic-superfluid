@@ -60,14 +60,18 @@ def get_Energy_without_SOC(k_x_values, k_y_values, phi_x_values, phi_y_values, w
                     energies[i, j, k, l, 3] = 1/2 * (b + np.sqrt(B_square + Delta**2 + 2*np.sqrt(B_square * ((a-mu)**2 + Delta**2)) + (a-mu)**2))
     return energies
 
-def get_superconducting_density(L_x, L_y, w_0, mu, Delta, B_x, B_y, Lambda_R, Lambda_D, h):
+def Fermi_function(energy, beta):
+    return 1 / (np.exp(beta*energy) + 1)
+
+def get_superconducting_density(L_x, L_y, w_0, mu, Delta, B_x, B_y, Lambda_R, Lambda_D, h, beta):
     k_x_values = 2*np.pi/L_x*np.arange(0, L_x)
     k_y_values = 2*np.pi/L_y*np.arange(0, L_y)
     phi_x_values = [-h, 0, h]
     phi_y_values = [-h, 0, h]
     E = GetAnalyticEnergies(k_x_values, k_y_values, phi_x_values, phi_y_values, w_0, mu, Delta, B_x, B_y, Lambda_R, Lambda_D)
     negative_energy = np.where(E<0, E, 0)
-    fundamental_energy = 1/2*np.sum(negative_energy, axis=(0, 1, 4))
+    positive_energy = np.where(E>0, E, 0)
+    fundamental_energy = 1/2*np.sum(negative_energy, axis=(0, 1, 4)) + np.sum(positive_energy * Fermi_function(positive_energy, beta), axis=(0, 1, 4))
     n_s_xx = 1/w_0 * 1/(L_x*L_y) * ( fundamental_energy[2,1] - 2*fundamental_energy[1,1] + fundamental_energy[0,1]) / h**2
     n_s_yy = 1/w_0 * 1/(L_x*L_y) * ( fundamental_energy[1,2] - 2*fundamental_energy[1,1] + fundamental_energy[1,0]) / h**2
     n_s_xy = 1/w_0 * 1/(L_x*L_y) * ( fundamental_energy[2,2] - fundamental_energy[2,0] - fundamental_energy[0,2] + fundamental_energy[0,0]) / (2*h)**2  #Finite difference of mixed derivatives
@@ -98,7 +102,7 @@ def integrate(B):
     B_y = B * ( g_yx * np.cos(theta) + g_yy * np.sin(theta) )
     # B_x = B * np.cos(theta)
     # B_y = B * np.sin(theta)
-    n[0], n[1], n[2], n[3] = get_superconducting_density(L_x, L_y, w_0, mu, Delta, B_x, B_y, Lambda_R, Lambda_D, h)
+    n[0], n[1], n[2], n[3] = get_superconducting_density(L_x, L_y, w_0, mu, Delta, B_x, B_y, Lambda_R, Lambda_D, h, beta)
     return n
 
 L_x = 2500#1500
@@ -111,7 +115,7 @@ theta = np.pi/2   #np.pi/2
 a = 3.08e-07 * np.sqrt(1)#3.08e-07 # cm
 n = 8.5e11 # 1/cm**2
 k_F = np.sqrt(2*np.pi*n) # 1/cm
-
+beta = 10
 mu_B = 5.79e-2 # meV/T
 Lambda_R = 5*Delta/(k_F*a)   #7.5e-7 / a    #0.56#5*Delta/np.sqrt((4*w_0 + mu)/w_0)/2
 Lambda_D = 0
@@ -131,7 +135,7 @@ params = {"L_x": L_x, "L_y": L_y, "w_0": w_0,
           "k_y_values": k_y_values, "h": h,
           "Lambda_D": Lambda_D,
           "g_xx": g_xx, "g_xy": g_xy, "g_yx": g_yx, "g_yy": g_yy,
-          "points": points}
+          "points": points, "beta": beta}
 
 
 if __name__ == "__main__":
@@ -143,7 +147,7 @@ if __name__ == "__main__":
     
     data_folder = Path("Data/")
     
-    name = f"n_By_mu_{mu}_L={L_x}_h={h}_B_y_in_({np.min(B_values)}-{np.round(np.max(B_values),3)})_Delta={Delta}_lambda_R={Lambda_R}_lambda_D={Lambda_D}_g_xx={g_xx}_g_xy={g_xy}_g_yy={g_yy}_g_yx={g_yx}_theta={np.round(theta,2)}_points={points}.npz"
+    name = f"n_By_mu_{mu}_L={L_x}_h={h}_B_y_in_({np.min(B_values)}-{np.round(np.max(B_values),3)})_Delta={Delta}_lambda_R={Lambda_R}_lambda_D={Lambda_D}_g_xx={g_xx}_g_xy={g_xy}_g_yy={g_yy}_g_yx={g_yx}_theta={np.round(theta,2)}_points={points}_beta={beta}.npz"
     file_to_open = data_folder / name
     np.savez(file_to_open , n_B_y=n_B_y, B_values=B_values,
              **params)
